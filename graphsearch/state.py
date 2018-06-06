@@ -28,8 +28,8 @@ class State(Node):
 	
 	def copyConstructor(self, other):
 		self.agent = Agent.copyConstructor(other.agent)
-		self.agentsByLocation = {agent.location : agent for agent in map(Agent.copyConstructor, other.agentsByLocation.values())}
-		self.boxesByLocation = {box.location : box for box in map(Box.copyConstructor, other.boxesByLocation.values())}
+		self.agentsByLocation = {agent.location : agent for agent in other.agentsByLocation.values()}
+		self.boxesByLocation = {box.location : box for box in other.boxesByLocation.values()}
 		self.goalConditions = other.goalConditions
 		self.setUpBoxes()
 		self.setUpAgents()
@@ -55,7 +55,7 @@ class State(Node):
 		return not (location in self.agentsByLocation or location in self.boxesByLocation or location in world.walls)
 
 	def changeAgent(self, agentLocation, location):
-		agent = self.getAgent(agentLocation)
+		agent = Agent.copyConstructor(self.getAgent(agentLocation))
 		del self.agentsByLocation[agentLocation]
 		agent.location = location
 		agent.HASH = None
@@ -64,10 +64,13 @@ class State(Node):
 		self.agentsByLocation[location] = agent
 	
 	def changeBox(self, boxLocation, location):
-		box = self.getBox(boxLocation)
+		box = Box.copyConstructor(self.getBox(boxLocation))
 		del self.boxesByLocation[boxLocation]
+		boxes = self.getBox(box.id)
+		boxes.remove(box)
 		box.location = location
 		box.HASH = None
+		boxes.append(box)
 		self.boxesByLocation[location] = box
 	
 	def getSuccessors(self):
