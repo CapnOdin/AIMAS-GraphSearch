@@ -6,10 +6,10 @@ class Action:
 	def __init__(self, description):
 		self.description = description
 	
-	def precondition(self, **state):
+	def precondition(self, **node):
 		raise NotImplementedError
 	
-	def effect(self, **state):
+	def effect(self, **node):
 		raise NotImplementedError
 	
 	def cost(self):
