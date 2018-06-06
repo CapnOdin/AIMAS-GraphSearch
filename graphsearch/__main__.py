@@ -5,9 +5,9 @@ import profile
 
 def main():
 	#state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAsimple2.lvl")
-	#state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAanagram.lvl")
+	state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAanagram.lvl")
 	#state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAAlphabet.lvl")
-	state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAAlphabet.lvl")
+	#state = communicator.loadFile("D:\GitHubProjects\JMAI-AIMAS\environment\levels\SAAlphabet.lvl")
 	
 	graphsearch = search.GraphSearch(strategy.Strategy())
 	
@@ -22,6 +22,6 @@ def main():
 
 
 
-#main()
-profile.run('main()')
+main()
+#profile.run('main()')
 input("Press Enter to Terminate the process")

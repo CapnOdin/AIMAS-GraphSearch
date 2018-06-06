@@ -29,8 +29,8 @@ class GraphSearch:
 				self.searchStatus(start)
 			count += 1
 			
-			if(count > 10000):
-				return leaf
+			#if(count > 10000):
+			#	return leaf
 			
 			for successor in leaf.getSuccessors():
 				if(not self.strategy.known(successor)):
