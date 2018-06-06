@@ -9,12 +9,13 @@ class State(Node):
 	
 	def __init__(self, parent = None, action = None, agent = None):
 		super().__init__(parent, action)
-		self.agent = agent
 		if(parent):
+			self.agent = parent.agent
 			self.agents = parent.agents
 			self.boxes = parent.boxes
 			self.goalConditions = parent.goalConditions
 		else:
+			self.agent = agent
 			self.agents = {}
 			self.boxes = {}
 			self.goalConditions = []
