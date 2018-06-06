@@ -5,6 +5,7 @@ class Location:
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+		self.HASH = None
 	
 	def isNeighbor(self, other):
 		return self.manhattanDistance(other) == 1
@@ -37,7 +38,9 @@ class Location:
 		return self.x == other.x and self.y == other.y
 	
 	def __hash__(self):
-		return hash((self.x, self.y))
+		if(not self.HASH):
+			self.HASH = hash((self.x, self.y))
+		return self.HASH
 
 	def __str__(self):
 		return f"({self.x}, {self.y})"

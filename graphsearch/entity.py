@@ -17,15 +17,18 @@ class Entity:
 
 class Agent(Entity):
 	
-	def __init__(self, id, location, colour):
+	def __init__(self, id, location, colour, HASH = None):
 		super().__init__(id, location)
 		self.colour = colour
+		self.HASH = HASH
 	
 	def copyConstructor(other):
-		return Agent(other.id, other.location, other.colour)
+		return Agent(other.id, other.location, other.colour, other.HASH)
 		
 	def __hash__(self):
-		return hash((self.id, self.location, self.colour))
+		if(not self.HASH):
+			self.HASH = hash((self.id, self.location, self.colour))
+		return self.HASH
 
 	def __eq__(self, other):
 		return self.id == other.id and self.location == other.location and self.colour == other.colour
@@ -37,15 +40,18 @@ class Agent(Entity):
 
 class Box(Entity):
 	
-	def __init__(self, id, location, colour):
+	def __init__(self, id, location, colour, HASH = None):
 		super().__init__(id, location)
 		self.colour = colour
+		self.HASH = HASH
 	
 	def copyConstructor(other):
-		return Box(other.id, other.location, other.colour)
+		return Box(other.id, other.location, other.colour, other.HASH)
 	
 	def __hash__(self):
-		return hash((self.id, self.location, self.colour))
+		if(not self.HASH):
+			self.HASH = hash((self.id, self.location, self.colour))
+		return self.HASH
 
 	def __eq__(self, other):
 		return self.id == other.id and self.location == other.location and self.colour == other.colour
@@ -59,9 +65,12 @@ class Goal(Entity):
 	
 	def __init__(self, id, location):
 		super().__init__(id, location)
+		self.HASH = None
 	
 	def __hash__(self):
-		return hash((self.id, self.location))
+		if(not self.HASH):
+			self.HASH = hash((self.id, self.location))
+		return self.HASH
 	
 	def __eq__(self, other):
 		return self.id == other.id and self.location == other.location
