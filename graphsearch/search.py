@@ -7,7 +7,7 @@ class GraphSearch:
 		self.strategy = strategy
 	
 	def search(self, initial):
-		f = open("search.txt", "w")
+		#f = open("search.txt", "w")
 		start = time.process_time()
 		count = 1
 		
@@ -22,12 +22,15 @@ class GraphSearch:
 			#f.write(f"f: {leaf.F}, g: {leaf.G}, h: {leaf.H}\n{leaf}\n")
 			
 			if(leaf.isGoal()):
-				f.close()
+				#f.close()
 				return leaf
 			
-			if((count % 100) == 0):
+			if((count % 10000) == 0):
 				self.searchStatus(start)
 			count += 1
+			
+			if(count > 10000):
+				return leaf
 			
 			for successor in leaf.getSuccessors():
 				if(not self.strategy.known(successor)):
