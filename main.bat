@@ -1,0 +1,2 @@
+python -m graphsearch
+pause
