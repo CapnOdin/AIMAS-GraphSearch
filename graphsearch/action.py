@@ -1,5 +1,5 @@
 
-import copy
+from graphsearch import state
 
 class Action:
 	
@@ -20,11 +20,11 @@ class Action:
 
 
 
-def prepairSuccessor(state, action):
-	successor = copy.deepcopy(state)
+def prepairSuccessor(node, action):
+	successor = state.State(node)
 	successor.F = None
 	successor.G = 0
-	successor.parent = state
+	successor.parent = node
 	successor.action = action
 	return successor
 	
@@ -39,20 +39,20 @@ class MoveAction(Action):
 	def targets(self):
 		return [self.agent.location, self.agtTo]
 	
-	def precondition(self, state):
-		return state.free(self.agtTo)
+	def precondition(self, node):
+		return node.free(self.agtTo)
 	
-	def effect(self, state):
-		successor = prepairSuccessor(state, self)
-		successor.changeAgent(copy.deepcopy(self.agent), self.agtTo)
+	def effect(self, node):
+		successor = prepairSuccessor(node, self)
+		successor.changeAgent(self.agent.location, self.agtTo)
 		return successor
 	
-	def getSuccessors(state):
+	def getSuccessors(node):
 		successors = []
 		for direct in ["N", "E", "S", "W"]:
-			action = MoveAction(state.agent, direct)
-			if(action.precondition(state)):
-				successors.append(action.effect(state))
+			action = MoveAction(node.agent, direct)
+			if(action.precondition(node)):
+				successors.append(action.effect(node))
 		return successors
 		
 
@@ -68,23 +68,23 @@ class PushAction(Action):
 	def targets(self):
 		return [self.agent.location, self.box.location, self.boxTo]
 	
-	def precondition(self, state):
-		return state.free(self.boxTo) and self.agent.location.isNeighbor(self.box.location) and self.box.colour == self.agent.colour
+	def precondition(self, node):
+		return node.free(self.boxTo) and self.agent.location.isNeighbor(self.box.location) and self.box.colour == self.agent.colour
 	
-	def effect(self, state):
-		successor = prepairSuccessor(state, self)
-		successor.changeAgent(copy.deepcopy(self.agent), self.box.location)
-		successor.changeBox(copy.deepcopy(self.box), self.boxTo)
+	def effect(self, node):
+		successor = prepairSuccessor(node, self)
+		successor.changeAgent(self.agent.location, self.box.location)
+		successor.changeBox(self.box.location, self.boxTo)
 		return successor
 	
-	def getSuccessors(state):
+	def getSuccessors(node):
 		successors = []
-		for neighbor in state.agent.location.getNeighbors():
-			if(neighbor in state.boxes):
+		for neighbor in node.agent.location.getNeighbors():
+			if(neighbor in node.boxes):
 				for direction in ["N", "E", "S", "W"]:
-					action = PushAction(state.agent, state.boxes.get(neighbor), direction)
-					if(action.precondition(state)):
-						successors.append(action.effect(state))
+					action = PushAction(node.agent, node.boxes.get(neighbor), direction)
+					if(action.precondition(node)):
+						successors.append(action.effect(node))
 		return successors
 
 
@@ -99,22 +99,22 @@ class PullAction(Action):
 	def targets(self):
 		return [self.agent.location, self.box.location, self.agtTo]
 	
-	def precondition(self, state):
-		return state.free(self.agtTo) and self.agent.location.isNeighbor(self.box.location) and self.box.colour == self.agent.colour
+	def precondition(self, node):
+		return node.free(self.agtTo) and self.agent.location.isNeighbor(self.box.location) and self.box.colour == self.agent.colour
 	
-	def effect(self, state):
-		successor = prepairSuccessor(state, self)
-		successor.changeAgent(copy.deepcopy(self.agent), self.agtTo)
-		successor.changeBox(copy.deepcopy(self.box), self.agent.location)
+	def effect(self, node):
+		successor = prepairSuccessor(node, self)
+		successor.changeAgent(self.agent.location, self.agtTo)
+		successor.changeBox(self.box.location, self.agent.location)
 		return successor
 
-	def getSuccessors(state):
+	def getSuccessors(node):
 		successors = []
-		for neighbor in state.agent.location.getNeighbors():
-			if(neighbor in state.boxes):
+		for neighbor in node.agent.location.getNeighbors():
+			if(neighbor in node.boxes):
 				for direction in ["N", "E", "S", "W"]:
-					action = PullAction(state.agent, direction, state.boxes.get(neighbor))
-					if(action.precondition(state)):
-						successors.append(action.effect(state))
+					action = PullAction(node.agent, direction, node.boxes.get(neighbor))
+					if(action.precondition(node)):
+						successors.append(action.effect(node))
 		return successors
 

@@ -1,24 +1,34 @@
 
 from graphsearch.node import Node
 from graphsearch.location import Location
+from graphsearch import action
+from graphsearch.entity import Agent, Box
 from graphsearch.condition import GoalCondition
-from graphsearch.action import MoveAction, PushAction, PullAction
 from graphsearch import world
 
 class State(Node):
 	
 	def __init__(self, parent = None, action = None, agent = None):
 		super().__init__(parent, action)
+		
+		self.agents = {}
+		self.boxes = {}
+		self.goalConditions = []
+		
 		if(parent):
-			self.agent = parent.agent
-			self.agents = parent.agents
-			self.boxes = parent.boxes
-			self.goalConditions = parent.goalConditions
+			self.copyConstructor(parent)
 		else:
 			self.agent = agent
-			self.agents = {}
-			self.boxes = {}
-			self.goalConditions = []
+	
+	def copyConstructor(self, other):
+		self.agent = Agent.copyConstructor(other.agent)
+		for location, agent in other.agents.items():
+			self.agents[location] = Agent.copyConstructor(agent)
+		for location, box in other.boxes.items():
+			self.boxes[location] = Box.copyConstructor(box)
+			
+		self.goalConditions = other.goalConditions
+	
 	
 	def isGoal(self):
 		for condition in self.goalConditions:
@@ -40,20 +50,22 @@ class State(Node):
 	def free(self, location):
 		return not (location in self.agents or location in self.boxes or location in world.walls)
 
-	def changeAgent(self, agent, location):
-		del self.agents[agent.location]
+	def changeAgent(self, agentLocation, location):
+		agent = self.agents[agentLocation]
+		del self.agents[agentLocation]
 		agent.location = location
 		if(self.agent.id == agent.id):
 			self.agent = agent
 		self.agents[location] = agent
 	
-	def changeBox(self, box, location):
-		del self.boxes[box.location]
+	def changeBox(self, boxLocation, location):
+		box = self.boxes[boxLocation]
+		del self.boxes[boxLocation]
 		box.location = location
 		self.boxes[location] = box
 	
 	def getSuccessors(self):
-		successors = [*MoveAction.getSuccessors(self), *PushAction.getSuccessors(self), *PullAction.getSuccessors(self)]
+		successors = [*action.MoveAction.getSuccessors(self), *action.PushAction.getSuccessors(self), *action.PullAction.getSuccessors(self)]
 		return successors
 	
 	def getClosetsBox(self, location, id, colour = False):

@@ -20,6 +20,9 @@ class Agent(Entity):
 	def __init__(self, id, location, colour):
 		super().__init__(id, location)
 		self.colour = colour
+	
+	def copyConstructor(other):
+		return Agent(other.id, other.location, other.colour)
 		
 	def __hash__(self):
 		return hash((self.id, self.location, self.colour))
@@ -37,6 +40,9 @@ class Box(Entity):
 	def __init__(self, id, location, colour):
 		super().__init__(id, location)
 		self.colour = colour
+	
+	def copyConstructor(other):
+		return Box(other.id, other.location, other.colour)
 	
 	def __hash__(self):
 		return hash((self.id, self.location, self.colour))
