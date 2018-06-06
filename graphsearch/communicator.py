@@ -20,10 +20,12 @@ def parseMap(strMap, colours):
 			if(strMap[row][column] == "+"):
 				world.walls[pos] = True
 			elif(re.match("[0-9]", strMap[row][column])):
-				initial.agents[pos] = Agent(strMap[row][column], pos, colours.get(strMap[row][column], "Red"))
+				initial.agentsByLocation[pos] = Agent(strMap[row][column], pos, colours.get(strMap[row][column], "Red"))
 			elif(re.match("[A-Z]", strMap[row][column])):
-				initial.boxes[pos] = Box(strMap[row][column], pos, colours.get(strMap[row][column], "Red"))
+				initial.boxesByLocation[pos] = Box(strMap[row][column], pos, colours.get(strMap[row][column], "Red"))
 			elif(re.match("[a-z]", strMap[row][column])):
 				world.goals[pos] = Goal(strMap[row][column], pos)
+	initial.setUpAgents()
+	initial.setUpBoxes()
 	return initial
 

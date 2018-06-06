@@ -80,9 +80,9 @@ class PushAction(Action):
 	def getSuccessors(node):
 		successors = []
 		for neighbor in node.agent.location.getNeighbors():
-			if(neighbor in node.boxes):
+			if(neighbor in node.boxesByLocation):
 				for direction in ["N", "E", "S", "W"]:
-					action = PushAction(node.agent, node.boxes.get(neighbor), direction)
+					action = PushAction(node.agent, node.boxesByLocation.get(neighbor), direction)
 					if(action.precondition(node)):
 						successors.append(action.effect(node))
 		return successors
@@ -111,9 +111,9 @@ class PullAction(Action):
 	def getSuccessors(node):
 		successors = []
 		for neighbor in node.agent.location.getNeighbors():
-			if(neighbor in node.boxes):
+			if(neighbor in node.boxesByLocation):
 				for direction in ["N", "E", "S", "W"]:
-					action = PullAction(node.agent, direction, node.boxes.get(neighbor))
+					action = PullAction(node.agent, direction, node.boxesByLocation.get(neighbor))
 					if(action.precondition(node)):
 						successors.append(action.effect(node))
 		return successors

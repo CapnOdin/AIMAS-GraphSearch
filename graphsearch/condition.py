@@ -19,8 +19,8 @@ class GoalCondition(Condition):
 		self.goal = goal
 	
 	def check(self, node):
-		if(self.goal.location in node.boxes):
-			return node.boxes.get(self.goal.location).id.lower() == self.goal.id
+		if(self.goal.location in node.boxesByLocation):
+			return node.boxesByLocation.get(self.goal.location).id.lower() == self.goal.id
 		return False
 
 	def __str__(self):
